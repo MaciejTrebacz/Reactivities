@@ -13,7 +13,8 @@ export default function ActivityDetails({activity,cancelActivity,openForm}: Prop
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
             <Card.Content>
-                <Card.Header>{activity.title}</Card.Header>
+                <Card.Header>
+                    {activity.title}</Card.Header>
                 <Card.Meta>
                     <span>{activity.date}</span>
                 </Card.Meta>
