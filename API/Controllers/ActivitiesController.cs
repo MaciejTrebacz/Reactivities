@@ -30,8 +30,6 @@ public class ActivitiesController :BaseApiController
     {
       return Ok(await Mediator
           .Send(new Create.Command{Activity = activity}));
-
-      
     }
 
     [HttpPut("{id}")]
