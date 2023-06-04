@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import React, {SyntheticEvent, useState} from "react";
 import {Activity} from "../../../app/models/activity";
 import {Button, Item, Label, Segment} from "semantic-ui-react";
-import fn = jest.fn;
 
 interface Props{
     activities: Activity[];
@@ -14,8 +13,11 @@ interface Props{
 export default function ActivityList({activities,selectActivity, deleteActivity,submitting}: Props) {
     const [target, setTarget] = useState('');
 
-
-
+    function handleDeleteActivity(e: SyntheticEvent<HTMLButtonElement>, id: string ) {
+        setTarget(e.currentTarget.name)
+        deleteActivity(id);
+    }
+    
     return (
         <Segment>
             <Item.Group divided>
@@ -36,10 +38,10 @@ export default function ActivityList({activities,selectActivity, deleteActivity,
                                     color={"green"}/>
                                 <Button
                                     name={activity.id}
-                                    onClick={()=>deleteActivity(activity.id)}
+                                    onClick={(e)=>handleDeleteActivity(e,activity.id)}
                                     floated={"right"}
                                     content={"Delete"}
-                                    loading={submitting}
+                                    loading={submitting && target === activity.id}
                                     color={"red"}/>
                                 <Label basic content={activity.category}/>
                             </Item.Extra>
