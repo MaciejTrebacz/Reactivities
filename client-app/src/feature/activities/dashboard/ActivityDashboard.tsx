@@ -10,7 +10,7 @@ export default observer(function ActivityDashboard() {
 
     // using axios
     useEffect(() => {
-        if (activityStore.activityRegistry.size >= 1) activityStore.loadActivities()
+        if (activityStore.activityRegistry.size <= 1) activityStore.loadActivities()
     }, [activityStore.loadActivities,activityStore.activityRegistry.size]);
 
     if (activityStore.loading) return <LoadingComponent content={"Loading App"}></LoadingComponent>
