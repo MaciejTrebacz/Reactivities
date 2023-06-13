@@ -1,5 +1,7 @@
 ﻿using Application.Activities;
 using Application.Core;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -22,11 +24,15 @@ public static class ApplicationServiceExtensions
             {
                 policy.AllowAnyMethod()
                     .AllowAnyHeader()
-                    .WithOrigins("http://localhost:3000");
+                    .WithOrigins("http://localhost:3000")
+                    .WithOrigins("http://localhost:3001");
             });
         });
         services.AddMediatR(typeof(GetAllActivities.Handler));
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+        services.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssemblyContaining<Create>();
+
         return services;
     }
 }
