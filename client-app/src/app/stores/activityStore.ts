@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from "mobx";
-import {Activity} from "../models/activity";
+import {Activity, people} from "../models/activity";
 import agent from "../api/agent";
 import {v4 as uuid} from "uuid";
 
@@ -39,6 +39,22 @@ export default class ActivityStore{
         )
     }
 
+    get reduceMethod(){
+        const people = [
+            {name: 'Jim', age: 26},
+            {name: 'Pam', age: 26},
+            {name: 'Dwight', age: 30},
+            {name: 'Maciej', age: 30},
+        ]
+        return Object.entries(
+            people.reduce((groupedPeople, person )=>{
+                const age = person.age
+                groupedPeople[age] = groupedPeople[age] ? [...groupedPeople[age], person] : [person]
+                return groupedPeople
+            }, {} as {[key:string]:  people[]})
+        )
+
+    }
 
     loadActivities = async () => {
         this.setLoading(true)
@@ -53,7 +69,6 @@ export default class ActivityStore{
             this.setLoading(false)
         }
     }
-
 
     loadActivity = async (id:string)=>{
         let activity = this.getActivity(id)
@@ -81,7 +96,6 @@ export default class ActivityStore{
         activity.date = activity.date.substring(0,10)
         this.activityRegistry.set(activity.id,activity)
     }
-
 
     private getActivity = (id: string)=>{
         return this.activityRegistry.get(id)

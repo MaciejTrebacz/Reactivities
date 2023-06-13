@@ -7,3 +7,8 @@ export interface Activity {
     city: string;
     venue: string;
 }
+
+export interface people {
+    age: number;
+    name: string;
+}

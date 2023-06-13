@@ -1,8 +1,9 @@
 import React, {SyntheticEvent} from 'react';
-import {Button, Item, Label} from "semantic-ui-react";
+import {Button, Icon, Item,Segment} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {Activity} from "../../../app/models/activity";
 import {useStore} from "../../../app/stores/store";
+import logo from "../../../images/user.png"
 
 interface Props {
     activity: Activity
@@ -10,41 +11,42 @@ interface Props {
 function ActivityListItem({activity}: Props) {
 
     const {activityStore}= useStore()
-    const {deleteActivity,loadActivity,submitting,} = activityStore
 
-    function handleDeleteActivity(e: SyntheticEvent<HTMLButtonElement>, id: string ) {
-        activityStore.target = e.currentTarget.name
-        deleteActivity(id);
-    }
 
     return (
-        <Item key={activity.id}>
-            <Item.Content>
-                <Item.Header as='a'>{activity.title}</Item.Header>
-                <Item.Meta>{activity.date}</Item.Meta>
-                <Item.Description>
-                    <div>{activity.description}</div>
-                    <div>{activity.city},  {activity.venue}</div>
-                </Item.Description>
-                <Item.Extra>
-                    <Button
-                        as={Link}
-                        onClick={()=> loadActivity(activity.id)}
+        <Segment.Group>
+            <Segment>
+                <Item.Group>
+                    <Item>
+                        <Item.Image size={'tiny'} circular src={logo}/>
+                        <Item.Content>
+                            <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                                {activity.title}
+                            </Item.Header>
+                            <Item.Description>Hosted by Bob</Item.Description>
+                        </Item.Content>
+                    </Item>
+                </Item.Group>
+            </Segment>
+            <Segment>
+                <span>
+                    <Icon name={'clock'}></Icon> {activity.date  }
+                      <Icon name={'marker'}></Icon> {activity.venue}
+                </span>
+            </Segment>
+            <Segment secondary>
+                Attendees go here
+            </Segment>
+            <Segment clearing>
+                <span>{activity.description}</span>
+                <Button as={Link}
                         to={`/activities/${activity.id}`}
+                        color={"teal"}
                         floated={"right"}
                         content={"View"}
-                        color={"green"}/>
-                    <Button
-                        name={activity.id}
-                        onClick={(e)=>handleDeleteActivity(e,activity.id)}
-                        floated={"right"}
-                        content={"Delete"}
-                        loading={submitting && activityStore.target === activity.id}
-                        color={"red"}/>
-                    <Label basic content={activity.category}/>
-                </Item.Extra>
-            </Item.Content>
-        </Item>
+                ></Button>
+            </Segment>
+        </Segment.Group>
     );
 }
 
