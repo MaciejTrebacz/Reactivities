@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+
+
 
 namespace Persistence
 {
@@ -10,6 +15,7 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
+
             if (context.Activities.Any()) return;
 
             var activities = new List<Activity>
@@ -108,6 +114,34 @@ namespace Persistence
 
             await context.Activities.AddRangeAsync(activities);
             await context.SaveChangesAsync();
+        }
+
+        public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+
+            var roles = new[] { "Admin", "Manager", "Member" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            string email = "maciekdmd90@gmail.com";
+            string password = "Test1234,";
+
+            if (await userManager.FindByEmailAsync(email) == null)
+            {
+                var user = new AppUser();
+                user.Email = email;
+                user.UserName = "test";
+                user.EmailConfirmed = true;
+
+                await userManager.CreateAsync(user, password);
+
+                await userManager.AddToRoleAsync(user, "Admin");
+            }
         }
     }
 }

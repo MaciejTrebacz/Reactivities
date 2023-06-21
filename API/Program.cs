@@ -1,5 +1,7 @@
 using API.ExceptionMiddleware;
 using API.Extensions;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -33,14 +36,19 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context);
+    await Seed.SeedUsers(userManager,roleManager);
 }
 catch (Exception e)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(e,"Error occurred during creating DB!");
 }
+
+
 
 
 app.Run();
