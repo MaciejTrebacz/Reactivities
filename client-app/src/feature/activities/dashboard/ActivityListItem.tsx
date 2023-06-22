@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {Activity} from "../../../app/models/activity";
 import {useStore} from "../../../app/stores/store";
 import logo from "../../../images/user.png"
+import { format } from 'date-fns';
 
 interface Props {
     activity: Activity
@@ -13,6 +14,7 @@ function ActivityListItem({activity}: Props) {
     const {activityStore}= useStore()
 
 
+    // @ts-ignore
     return (
         <Segment.Group>
             <Segment>
@@ -30,8 +32,8 @@ function ActivityListItem({activity}: Props) {
             </Segment>
             <Segment>
                 <span>
-                    <Icon name={'clock'}></Icon> {activity.date  }
-                      <Icon name={'marker'}></Icon> {activity.venue}
+                    <Icon name={'clock'}></Icon> {format(activity.date!, 'dd MM yyyy h:mm aa') }
+                    <Icon name={'marker'}></Icon> {activity.venue}
                 </span>
             </Segment>
             <Segment secondary>

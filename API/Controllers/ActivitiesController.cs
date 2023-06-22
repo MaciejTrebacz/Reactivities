@@ -1,6 +1,7 @@
 ﻿using Application.Activities;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -20,6 +21,7 @@ public class ActivitiesController :BaseApiController
             await Mediator.Send(new GetAllActivities.Query()));
     }
 
+    [Authorize]
     [HttpGet("{id}")] //api/activities/guid
     public async Task<ActionResult> GetActivity(Guid id)
     {
@@ -48,6 +50,8 @@ public class ActivitiesController :BaseApiController
     {
         return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
     }
+
+
 
 
 }
